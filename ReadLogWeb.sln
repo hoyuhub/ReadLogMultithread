@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2005
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadLogWeb", "ReadLogWeb\ReadLogWeb.csproj", "{965E97E9-10F8-41E2-A0C6-1BE9845B5D64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadLog", "ReadLog\ReadLog.csproj", "{CB7A0805-040D-4AF9-AA25-C37BAE5E2EF4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{965E97E9-10F8-41E2-A0C6-1BE9845B5D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{965E97E9-10F8-41E2-A0C6-1BE9845B5D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{965E97E9-10F8-41E2-A0C6-1BE9845B5D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{965E97E9-10F8-41E2-A0C6-1BE9845B5D64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB7A0805-040D-4AF9-AA25-C37BAE5E2EF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB7A0805-040D-4AF9-AA25-C37BAE5E2EF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB7A0805-040D-4AF9-AA25-C37BAE5E2EF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB7A0805-040D-4AF9-AA25-C37BAE5E2EF4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF332389-2833-4B87-BE2E-E599BAF625F8}
+	EndGlobalSection
+EndGlobal
