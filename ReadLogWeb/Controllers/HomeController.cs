@@ -32,15 +32,16 @@ namespace ReadLogWeb.Controllers
         }
 
         private long position;
-        public string TestFun()
-        {
-            Stopwatch st = new Stopwatch();
-            st.Start();
-            ReadArithmetic.ListLine();
-            ILog log = LogManager.GetLogger("LogError");
-            TimeSpan ts = st.Elapsed;
-            log.Error("这一次用时：" + ts);
-            return ts.ToString();
-        }
+        //public string TestFun()
+        //{
+        //    Stopwatch st = new Stopwatch();
+        //    st.Start();
+        //    ReadArithmetic.ListLine();
+        //    ILog log = LogManager.GetLogger("LogError");
+        //    st.Stop();
+        //    TimeSpan ts = st.Elapsed;
+        //    log.Error("这一次用时：" + ts);
+        //    return ts.ToString();
+        //}
     }
 }

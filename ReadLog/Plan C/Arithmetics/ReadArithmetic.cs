@@ -33,7 +33,6 @@ namespace LogRead.Plan_C.Arithmetics
         /// <returns></returns>
         public static void ListLine()
         {
-            RedisDal dal = new RedisDal();
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 fs.Position = position;
@@ -53,7 +52,7 @@ namespace LogRead.Plan_C.Arithmetics
                                 if (listStr.Count == 100)
                                 {
                                     AnalyticalArithmetic anal = new AnalyticalArithmetic();
-                                    anal.dal = dal;
+
                                     anal.listStr = listStr.ToList();
                                     ThreadPool.QueueUserWorkItem(new WaitCallback(anal.AllFun));
                                     listStr.Clear();
@@ -75,7 +74,7 @@ namespace LogRead.Plan_C.Arithmetics
                     position = fs.Length;
                     analytickal = new AnalyticalArithmetic();
                     analytickal.listStr = listStr.ToList();
-                    analytickal.dal = dal;
+
                     ThreadPool.QueueUserWorkItem(analytickal.AllFun);
                 }
             }

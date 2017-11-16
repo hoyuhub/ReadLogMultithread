@@ -12,9 +12,9 @@ namespace ReadLog.Plan_C.Arithmetics
     //本类用于多线程使用，解析接收到的文本数据
     public class AnalyticalArithmetic
     {
-        
+
         //在这里执行数据库插入操作
-        public RedisDal dal { get; set; }
+        private RedisDal dal = new RedisDal();
         public List<string> listStr { get; set; }
 
         /// <summary>
@@ -70,6 +70,7 @@ namespace ReadLog.Plan_C.Arithmetics
                 HospPhoneStatistics(list);
                 //执行获取手机短讯接口调用查询方法
                 PhoneSendCounts(list);
+                dal.Dispose();
             }
         }
 
@@ -169,6 +170,7 @@ namespace ReadLog.Plan_C.Arithmetics
 
                 dal.DayCount(listDayCount);
                 dal.SecondCount(listSecondCount);
+                dal.SecondTopCount(listSecondCount);
             }
         }
 
@@ -207,6 +209,7 @@ namespace ReadLog.Plan_C.Arithmetics
 
                 }
                 dal.PhoneMinuteCount(listPhoneCount);
+                dal.PhoneMinuteTopCount(listPhoneCount);
             }
         }
 

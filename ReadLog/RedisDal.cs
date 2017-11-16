@@ -62,7 +62,21 @@ namespace ReadLog
             }
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="list"></param>
+        public void SecondTopCount(List<Count> list)
+        {
+            lock (this)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    string sortedSetKey = "LogSecondTopCount:" + list[i].hospid + ":" + list[i].url;
+                    Redis.AddItemToSortedSet(sortedSetKey, list[i].time.ToString(), list[i].count);
+                }
+            }
+        }
         /// <summary>
         /// 保存每个手机号每分钟调用短讯发送接口的次数
         /// 针对每一个手机号都有一个自己的Sorted Set
@@ -90,6 +104,18 @@ namespace ReadLog
                         value = list[i].count.ToString() + "_" + list[i].time.ToString();
                     }
                     Redis.AddItemToSortedSet(sortedSetKey, value, time);
+                }
+            }
+        }
+
+        public void PhoneMinuteTopCount(List<Count> list)
+        {
+            lock (this)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    string sortedSetKey = "LogPhoneMinuteTopCount:" + list[i].phone;
+                    Redis.AddItemToSortedSet(sortedSetKey, list[i].time.ToString(), list[i].count);
                 }
             }
         }

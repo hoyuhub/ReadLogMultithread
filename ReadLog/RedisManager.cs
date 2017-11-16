@@ -49,8 +49,8 @@ namespace ReadLog
             // 支持读写分离，均衡负载   
             return new PooledRedisClientManager(readWriteHosts, readOnlyHosts, new RedisClientManagerConfig
             {
-                MaxWritePoolSize = 5, // “写”链接池链接数   
-                MaxReadPoolSize = 5, // “读”链接池链接数   
+                MaxWritePoolSize = 2, // “写”链接池链接数   
+                MaxReadPoolSize = 2, // “读”链接池链接数   
                 AutoStart = true,
             });
         }
