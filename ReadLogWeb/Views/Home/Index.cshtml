@@ -3,12 +3,20 @@
 }
 
 <script type="text/javascript">
-    function myfun()
-    {
-        $.post("/home/test", function (v) {
-            alert("本次用时："+v);
-        });
+    var flag = true
+    function myfun() {
+        setInterval(function () {
+            $.post("/home/test", function (v) {
+                console.log("流长度：" + v);
+            });
+        },1000)
+
     }
+
+    function close() {
+        flag = false;
+    }
+
 
 </script>
 <div class="jumbotron">
@@ -18,5 +26,6 @@
 </div>
 
 <div>
-   <input type="button" onclick="myfun()" value="解析文本"/>
+    <input type="button" onclick="myfun()" value="开始" />
+    <input type="button" onclick="close()" value="结束" />
 </div>
