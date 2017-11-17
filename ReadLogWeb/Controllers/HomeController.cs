@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Web;
+using System.IO;
 using System.Web.Mvc;
 
 namespace ReadLogWeb.Controllers
@@ -31,17 +32,16 @@ namespace ReadLogWeb.Controllers
             return View();
         }
 
-        private long position;
-        //public string TestFun()
-        //{
-        //    Stopwatch st = new Stopwatch();
-        //    st.Start();
-        //    ReadArithmetic.ListLine();
-        //    ILog log = LogManager.GetLogger("LogError");
-        //    st.Stop();
-        //    TimeSpan ts = st.Elapsed;
-        //    log.Error("这一次用时：" + ts);
-        //    return ts.ToString();
-        //}
+        FileStream fs = new FileStream("e:\\logfile.log", FileMode.Open, FileAccess.Read);
+        public void test()
+        {
+            ILog log = LogManager.GetLogger("LogError");
+
+            log.Error("文件流长度：" + fs.Length);
+
+        }
+
+
+
     }
 }

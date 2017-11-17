@@ -15,7 +15,7 @@ namespace ReadLog
         /// <summary>  
         /// redis配置文件信息  
         /// </summary>  
-        private static string RedisPath = "127.0.0.1:6379";
+        private static string RedisPath = System.Web.Configuration.WebConfigurationManager.AppSettings["RedisPath"];
         private static PooledRedisClientManager _prcm;
 
         /// <summary>  
@@ -49,8 +49,8 @@ namespace ReadLog
             // 支持读写分离，均衡负载   
             return new PooledRedisClientManager(readWriteHosts, readOnlyHosts, new RedisClientManagerConfig
             {
-                MaxWritePoolSize = 2, // “写”链接池链接数   
-                MaxReadPoolSize = 2, // “读”链接池链接数   
+                MaxWritePoolSize = 6, // “写”链接池链接数   
+                MaxReadPoolSize = 6, // “读”链接池链接数   
                 AutoStart = true,
             });
         }

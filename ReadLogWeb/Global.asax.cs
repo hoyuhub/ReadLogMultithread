@@ -20,9 +20,6 @@ namespace ReadLogWeb
 {
     public class MvcApplication : System.Web.HttpApplication
     {
-
-        private long position = 0L;
-
         IScheduler sched;
         protected void Application_Start()
         {
@@ -31,16 +28,10 @@ namespace ReadLogWeb
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             log4net.Config.XmlConfigurator.Configure();
-
-            //OnTimedEvent();
-            //System.Timers.Timer myTimer = new System.Timers.Timer(30000);
-            //myTimer.Elapsed += new System.Timers.ElapsedEventHandler(OnTimedEvent);
-            //myTimer.Interval = 2000;
-            //myTimer.Enabled = true;
-            MyJobs();
+            //MyJobs();  
         }
 
-        public  void MyJobs()
+        public void MyJobs()
         {
 
             //工厂
@@ -56,13 +47,12 @@ namespace ReadLogWeb
                 DateTime.Now,
                 null,
                 SimpleTriggerImpl.RepeatIndefinitely,
-                TimeSpan.FromSeconds(20));
+                TimeSpan.FromSeconds(10));
             //执行
             scheduler.ScheduleJob(jobDetail, trigger);
 
         }
 
-        //private void OnTimedEvent(object source, ElapsedEventArgs e);
         private void OnTimedEvent(object sender, ElapsedEventArgs e)
         {
             lock (this)

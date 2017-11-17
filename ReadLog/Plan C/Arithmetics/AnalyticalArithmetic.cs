@@ -13,19 +13,18 @@ namespace ReadLog.Plan_C.Arithmetics
     public class AnalyticalArithmetic
     {
 
-        //在这里执行数据库插入操作
-        private RedisDal dal = new RedisDal();
+        //需要处理的文本数据
         public List<string> listStr { get; set; }
 
         /// <summary>
         /// 根据得到的文本返回符合要求的数据集合
         /// </summary>
-        /// <param name="list">获取到的文本</param>
         /// <returns></returns>
         public List<LogEntity> GetLogEntitys()
         {
             lock (this)
             {
+                RedisDal dal = new RedisDal();
                 List<LogEntity> logList = new List<LogEntity>();
                 //定义正则表达式
                 string pattern = @"(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}),\d{3} \[\d+] [A-Z]+ .* - Request .* (\{.*}) ([a-z]+|[a-z]+/[a-z]+)";
@@ -56,10 +55,12 @@ namespace ReadLog.Plan_C.Arithmetics
                         logList.Add(new LogEntity(Convert.ToDateTime(match.Groups[1].Value), match.Groups[2].Value, match.Groups[3].Value, hospid, phone));
                     }
                 }
+                dal.Dispose();
                 return logList;
             }
         }
 
+        //统一调用方法
         public void AllFun(object s)
         {
             lock (this)
@@ -70,7 +71,6 @@ namespace ReadLog.Plan_C.Arithmetics
                 HospPhoneStatistics(list);
                 //执行获取手机短讯接口调用查询方法
                 PhoneSendCounts(list);
-                dal.Dispose();
             }
         }
 
@@ -78,10 +78,12 @@ namespace ReadLog.Plan_C.Arithmetics
         /// 统计每家医院每个接口每秒的调用次数
         /// 统计每家医院每个接口每天的调用次数
         /// </summary>
+        /// <param name="list">待处理数据</param>
         public void HospPhoneStatistics(List<LogEntity> list)
         {
             lock (this)
             {
+                RedisDal dal = new RedisDal();
                 #region 用linq将数据分组处理
                 var result =
                    list.GroupBy(
@@ -167,20 +169,25 @@ namespace ReadLog.Plan_C.Arithmetics
 
                     }
                 }
-
+                //将数据添加到redis中
                 dal.DayCount(listDayCount);
                 dal.SecondCount(listSecondCount);
                 dal.SecondTopCount(listSecondCount);
+                dal.Dispose();
             }
         }
 
-        //按手机号统计一段时间内短讯发送接口的调用此时
-        //时间单位：分钟
+
+        /// <summary>
+        /// 按手机号统计一段时间内短讯发送接口的调用此时
+        /// 时间单位：分钟
+        /// </summary>
+        /// <param name="list">待处理数据</param>
         public void PhoneSendCounts(List<LogEntity> list)
         {
             lock (this)
             {
-
+                RedisDal dal = new RedisDal();
                 //每个手机号每分钟调用指定接口的次数
                 List<Count> listPhoneCount = new List<Count>();
                 foreach (LogEntity l in list)
@@ -208,8 +215,10 @@ namespace ReadLog.Plan_C.Arithmetics
                     }
 
                 }
+                //将数据添加到redis中
                 dal.PhoneMinuteCount(listPhoneCount);
                 dal.PhoneMinuteTopCount(listPhoneCount);
+                dal.Dispose();
             }
         }
 

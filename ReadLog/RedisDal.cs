@@ -29,7 +29,6 @@ namespace ReadLog
 
         }
 
-
         /// <summary>
         /// 保存每家医院每秒钟的日志数
         /// 每家医院和接口都有保存每秒日志数的Sorted Set
@@ -63,7 +62,9 @@ namespace ReadLog
         }
 
         /// <summary>
-        /// 
+        /// 保存每家医院每秒钟日志数（本方法为日志数top值服务）
+        /// 每家医院和接口都有保存每秒日志数的Sorted Set
+        /// key为 LogSecondTopCount:hospId:url
         /// </summary>
         /// <param name="list"></param>
         public void SecondTopCount(List<Count> list)
@@ -77,6 +78,7 @@ namespace ReadLog
                 }
             }
         }
+
         /// <summary>
         /// 保存每个手机号每分钟调用短讯发送接口的次数
         /// 针对每一个手机号都有一个自己的Sorted Set
@@ -108,6 +110,12 @@ namespace ReadLog
             }
         }
 
+        /// <summary>
+        /// 保存每个手机号每分钟调用短讯发送接口的次数(本方法为日志数top值服务)
+        /// 针对每一个手机号都有一个自己的Sorted Set
+        /// key为 LogPhoneTopCount:phone 
+        /// </summary>
+        /// <param name="list"></param>
         public void PhoneMinuteTopCount(List<Count> list)
         {
             lock (this)
@@ -120,5 +128,37 @@ namespace ReadLog
             }
         }
 
+        /// <summary>
+        /// 获取旧流位置
+        /// </summary>
+        /// <returns></returns>
+        public long GetFilePosition()
+        {
+            lock (this)
+            {
+                long position = Redis.Get<long>("LogPosition");
+                return position;
+            }
+
+        }
+
+        /// <summary>
+        /// 更新文件流位置
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public bool SetFilePosition(string position)
+        {
+            lock (this)
+            {
+                string key = "LogPosition";
+                int exists = Redis.Exists(key);
+                if (exists > 0)
+                {
+                    Redis.Del(key);
+                }
+                return Redis.Set(key, position);
+            }
+        }
     }
 }

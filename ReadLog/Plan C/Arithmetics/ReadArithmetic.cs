@@ -17,13 +17,7 @@ namespace LogRead.Plan_C.Arithmetics
     {
 
         //日志文件路路径,传入或者以配置文件的形式读取
-        private static string path = "e:\\logfile.log";
-
-        //文件流读取起始位置
-        private static long position = 0L;
-
-
-        #region 线程一
+        private static string path = System.Web.Configuration.WebConfigurationManager.AppSettings["LogFilePath"];
 
         /// <summary>
         /// 从指定位置
@@ -33,26 +27,37 @@ namespace LogRead.Plan_C.Arithmetics
         /// <returns></returns>
         public static void ListLine()
         {
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
+            if (File.Exists(path))
             {
-                fs.Position = position;
-                using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
                 {
-                    string line = string.Empty;
-                    List<string> listStr = new List<string>();
-                    Dictionary<string, List<string>> dic = new Dictionary<string, List<string>>();
-
-                    while (true)
+                    //设置线程池中最多有20个线程
+                    ThreadPool.SetMaxThreads(20, 20);
+                    //获取上次文件流结束位置（若旧流位置大于新流长度则视为新文件，流位置初始化）
+                    RedisDal dal = new RedisDal();
+                    long oldPosition = dal.GetFilePosition();
+                    if (oldPosition > fs.Length)
                     {
-                        try
+                        fs.Position = 0L;
+                    }
+                    else
+                    {
+                        fs.Position = oldPosition;
+                    }
+                    //每100行文本创建一个线程，最后余量创建一个线程
+                    using (StreamReader sr = new StreamReader(fs, Encoding.UTF8))
+                    {
+                        string line = string.Empty;
+                        List<string> listStr = new List<string>();
+                        while (true)
                         {
+
                             line = sr.ReadLine();
                             if (line != null)
                             {
                                 if (listStr.Count == 100)
                                 {
                                     AnalyticalArithmetic anal = new AnalyticalArithmetic();
-
                                     anal.listStr = listStr.ToList();
                                     ThreadPool.QueueUserWorkItem(new WaitCallback(anal.AllFun));
                                     listStr.Clear();
@@ -63,24 +68,21 @@ namespace LogRead.Plan_C.Arithmetics
                             {
                                 break;
                             }
+
                         }
-                        catch (Exception e)
-                        {
-                            throw e;
-                        }
+                        AnalyticalArithmetic analytickal = new AnalyticalArithmetic();
+                        //保存旧流位置
+                        dal.SetFilePosition(fs.Length.ToString());
+                        dal.Dispose();
+                        analytickal = new AnalyticalArithmetic();
+                        analytickal.listStr = listStr.ToList();
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(analytickal.AllFun));
                     }
-                    AnalyticalArithmetic analytickal = new AnalyticalArithmetic();
-
-                    position = fs.Length;
-                    analytickal = new AnalyticalArithmetic();
-                    analytickal.listStr = listStr.ToList();
-
-                    ThreadPool.QueueUserWorkItem(analytickal.AllFun);
                 }
             }
 
         }
-        #endregion
+    
 
 
 
